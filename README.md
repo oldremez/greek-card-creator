@@ -22,12 +22,11 @@ The `::` separator is the default Anki import format — you can paste the reply
 
 ## Setup
 
-**Prerequisites:** Python 3.11+, a Telegram bot token, an Anthropic API key.
+**Prerequisites:** Docker, a Telegram bot token, an Anthropic API key.
 
 ```bash
 git clone https://github.com/yourname/greek-card-creator
 cd greek-card-creator
-pip install -r requirements.txt
 cp .env.example .env
 ```
 
@@ -39,9 +38,32 @@ ANTHROPIC_API_KEY=    # from console.anthropic.com
 ALLOWED_USER_ID=      # your Telegram user ID (get it from @userinfobot)
 ```
 
-Run:
+Build and start:
 
 ```bash
+docker compose up -d
+```
+
+View logs:
+
+```bash
+docker compose logs -f
+```
+
+Stop:
+
+```bash
+docker compose down
+```
+
+The container restarts automatically unless explicitly stopped.
+
+### Running without Docker
+
+**Prerequisites:** Python 3.11+
+
+```bash
+pip install -r requirements.txt
 python bot.py
 ```
 
@@ -56,9 +78,11 @@ Photos sent normally (compressed by Telegram) and images sent as files — JPEG,
 ## Project layout
 
 ```
-bot.py            — Telegram handlers
-claude_client.py  — Claude API call with structured output
-config.py         — env var loader
+bot.py              — Telegram handlers
+claude_client.py    — Claude API call with structured output
+config.py           — env var loader
+Dockerfile
+docker-compose.yml
 requirements.txt
 .env.example
 ```
