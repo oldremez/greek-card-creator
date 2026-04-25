@@ -4,15 +4,17 @@ from pydantic import BaseModel
 
 client = anthropic.Anthropic()
 
-EXTRACTION_PROMPT = """You are a Greek language expert. Analyze the image and extract all Greek words and phrases visible in it.
+EXTRACTION_PROMPT = """You are a Greek language expert. Analyze the image and extract Greek vocabulary and expressions visible in it.
 
-For each Greek word or phrase:
-1. Provide the normalized (dictionary/lemma) form — e.g. verb in infinitive, noun in nominative singular
-2. Provide the Russian translation
-3. Record the original form exactly as it appears in the image (inflected/conjugated form)
+**Idioms and multi-word expressions come first.**
+If two or more words form a fixed expression, idiom, or collocation — e.g. «αν και», «έτσι κι αλλιώς», «μια χαρά», «παρά πολύ», «από τότε που» — treat the whole expression as ONE entry. Do NOT break it into individual words. The meaning of an idiom is not the sum of its parts.
 
-Focus on meaningful vocabulary: nouns, verbs, adjectives, adverbs, set phrases. Skip punctuation and numerals.
-If the original form and normalized form are identical, use the same value for both fields.
+For every entry produce:
+1. normalized — the canonical form of the word or expression (verb → infinitive, noun → nominative singular, idiom → its standard citation form)
+2. translation — Russian translation of the word or expression as a whole
+3. original — the form as it appears in the image (use the same value as normalized when identical)
+
+Focus on meaningful vocabulary: nouns, verbs, adjectives, adverbs, conjunctions, particles, idioms, and set phrases. Skip standalone punctuation and bare numerals.
 If no Greek text is found in the image, return an empty cards array."""
 
 
