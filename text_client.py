@@ -112,8 +112,14 @@ def translate_russian(word: str) -> RussianToGreek:
 
 # ── compare 2–3 Greek words ────────────────────────────────────────────────────
 
+class ComparisonCard(BaseModel):
+    normalized: str   # canonical Greek form
+    translation: str  # concise Russian gloss
+
+
 class Comparison(BaseModel):
-    comparison: str  # plain-text explanation in Russian
+    comparison: str              # plain-text explanation in Russian
+    cards: list[ComparisonCard]  # one card per compared word, in input order
 
 
 _COMPARE_PROMPT = """\
@@ -125,10 +131,14 @@ Compare these Greek words / phrases and explain the differences IN RUSSIAN:
 
 Cover: meaning differences, connotation, register/formality, grammatical notes, typical contexts.
 Include short example sentences where helpful. Plain text, no markdown.
+
+Also fill the `cards` list — one entry per word above, in the same order:
+- normalized: canonical dictionary form (verb → infinitive, noun → nominative singular)
+- translation: the most common Russian translation, short enough for a flashcard
 """
 
 
-def compare_greek(words: list[str]) -> str:
+def compare_greek(words: list[str]) -> Comparison:
     bullet_list = "\n".join(f"• {w}" for w in words)
     response = client.messages.parse(
         model="claude-opus-4-7",
@@ -136,4 +146,4 @@ def compare_greek(words: list[str]) -> str:
         messages=[{"role": "user", "content": _COMPARE_PROMPT.format(words=bullet_list)}],
         output_format=Comparison,
     )
-    return response.parsed_output.comparison
+    return response.parsed_output

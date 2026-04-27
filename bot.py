@@ -113,12 +113,14 @@ async def _handle_translate_russian(update: Update, word: str) -> None:
 async def _handle_compare(update: Update, words: list[str]) -> None:
     status = await update.message.reply_text("🔍 Сравниваю слова...")
     try:
-        comparison = compare_greek(words)
+        result = compare_greek(words)
     except Exception as e:
         logger.exception("compare_greek failed")
         await status.edit_text(f"❌ Ошибка: {e}")
         return
-    await status.edit_text(comparison)
+    await status.edit_text(result.comparison)
+    for card in result.cards:
+        await update.message.reply_text(f"{card.normalized}::{card.translation}")
 
 
 async def handle_text(update: Update, _context: ContextTypes.DEFAULT_TYPE) -> None:
