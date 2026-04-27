@@ -132,7 +132,7 @@ def compare_greek(words: list[str]) -> str:
     bullet_list = "\n".join(f"• {w}" for w in words)
     response = client.messages.parse(
         model="claude-opus-4-7",
-        max_tokens=1024,
+        max_tokens=4096,
         messages=[{"role": "user", "content": _COMPARE_PROMPT.format(words=bullet_list)}],
         output_format=Comparison,
     )
