@@ -83,7 +83,7 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     await _process_image(update, buf.getvalue(), claude_mime)
 
 
-async def _handle_explain_greek(update: Update, word: str) -> None:
+async def _handle_explain_greek(update: Update, context: ContextTypes.DEFAULT_TYPE, word: str) -> None:
     status = await update.message.reply_text("🔍 Разбираю слово...")
     try:
         result = explain_greek(word)
@@ -93,10 +93,10 @@ async def _handle_explain_greek(update: Update, word: str) -> None:
         return
     await status.edit_text(result.explanation)
     card_line = f"{result.card_normalized}::{result.card_translation}"
-    await update.message.reply_text(card_line)
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=card_line)
 
 
-async def _handle_translate_russian(update: Update, word: str) -> None:
+async def _handle_translate_russian(update: Update, context: ContextTypes.DEFAULT_TYPE, word: str) -> None:
     status = await update.message.reply_text("🔍 Перевожу...")
     try:
         result = translate_russian(word)
@@ -106,11 +106,13 @@ async def _handle_translate_russian(update: Update, word: str) -> None:
         return
     await status.edit_text(result.overview)
     for option in result.options:
-        card_line = f"{option.greek}::{option.translation}"
-        await update.message.reply_text(card_line)
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f"{option.greek}::{option.translation}",
+        )
 
 
-async def _handle_compare(update: Update, words: list[str]) -> None:
+async def _handle_compare(update: Update, context: ContextTypes.DEFAULT_TYPE, words: list[str]) -> None:
     status = await update.message.reply_text("🔍 Сравниваю слова...")
     try:
         result = compare_greek(words)
@@ -120,10 +122,13 @@ async def _handle_compare(update: Update, words: list[str]) -> None:
         return
     await status.edit_text(result.comparison)
     for card in result.cards:
-        await update.message.reply_text(f"{card.normalized}::{card.translation}")
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f"{card.normalized}::{card.translation}",
+        )
 
 
-async def handle_text(update: Update, _context: ContextTypes.DEFAULT_TYPE) -> None:
+async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not _is_allowed(update):
         return
     text = update.message.text.strip()
@@ -134,7 +139,7 @@ async def handle_text(update: Update, _context: ContextTypes.DEFAULT_TYPE) -> No
 
     if len(lines) >= 2:
         if all(script(ln) == "greek" for ln in lines[:3]):
-            await _handle_compare(update, lines[:3])
+            await _handle_compare(update, context, lines[:3])
             return
         await update.message.reply_text(
             "Отправь 2–3 греческих слова (по одному на строку) для сравнения, "
@@ -145,9 +150,9 @@ async def handle_text(update: Update, _context: ContextTypes.DEFAULT_TYPE) -> No
     word = lines[0]
     detected = script(word)
     if detected == "greek":
-        await _handle_explain_greek(update, word)
+        await _handle_explain_greek(update, context, word)
     elif detected == "cyrillic":
-        await _handle_translate_russian(update, word)
+        await _handle_translate_russian(update, context, word)
     else:
         await update.message.reply_text(
             "Отправь греческое или русское слово/фразу."
