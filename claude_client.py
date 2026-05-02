@@ -10,7 +10,7 @@ EXTRACTION_PROMPT = """You are a Greek language expert. Analyze the image and ex
 If two or more words form a fixed expression, idiom, or collocation — e.g. «αν και», «έτσι κι αλλιώς», «μια χαρά», «παρά πολύ», «από τότε που» — treat the whole expression as ONE entry. Do NOT break it into individual words. The meaning of an idiom is not the sum of its parts.
 
 For every entry produce:
-1. normalized — the canonical form of the word or expression (verb → infinitive, noun → nominative singular, idiom → its standard citation form)
+1. normalized — the canonical form of the word or expression (verb → infinitive, noun → article + nominative singular e.g. ο άνδρας / η γυναίκα / το παιδί, idiom → its standard citation form)
 2. translation — Russian translation of the word or expression as a whole
 3. original — the form as it appears in the image (use the same value as normalized when identical)
 

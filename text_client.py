@@ -57,7 +57,7 @@ Greek words that look or sound similar but carry a different meaning. Write "н�
 Keep each section concise and practical.
 
 Also fill:
-- card_normalized: canonical dictionary form (verb → infinitive, noun → nominative singular, idiom → citation form)
+- card_normalized: canonical dictionary form (verb → infinitive, noun → article + nominative singular e.g. ο άνδρας / η γυναίκα / το παιδί, idiom → citation form)
 - card_translation: the most common Russian translation, short enough for a flashcard
 """
 
@@ -93,7 +93,7 @@ Write IN RUSSIAN:
 A short overview (2–4 sentences) of the possible Greek translations and when each is used.
 
 Then fill the `options` list — one entry per distinct Greek translation, with:
-- greek: the normalized Greek form
+- greek: the normalized Greek form (verb → infinitive, noun → article + nominative singular e.g. ο άνδρας / η γυναίκα / το παιδί)
 - translation: a concise Russian gloss suitable for a flashcard back
 
 Keep the overview practical and concise. Plain text, no markdown.
@@ -133,7 +133,7 @@ Cover: meaning differences, connotation, register/formality, grammatical notes, 
 Include short example sentences where helpful. Plain text, no markdown.
 
 Also fill the `cards` list — one entry per word above, in the same order:
-- normalized: canonical dictionary form (verb → infinitive, noun → nominative singular)
+- normalized: canonical dictionary form (verb → infinitive, noun → article + nominative singular e.g. ο άνδρας / η γυναίκα / το παιδί)
 - translation: the most common Russian translation, short enough for a flashcard
 """
 
